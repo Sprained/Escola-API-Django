@@ -7,6 +7,7 @@ from curso.serializer import CursoSerializer, ListaMatriculasCursoSerializer
 class CursosViewset(viewsets.ModelViewSet):
     queryset = Curso.objects.all()
     serializer_class = CursoSerializer
+    http_method_names = ['get', 'post', 'put']
     permission_classes = [IsAuthenticated]
 
 class ListaMatriculasCurso(generics.ListAPIView):

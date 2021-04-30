@@ -1,10 +1,18 @@
 from rest_framework import serializers
 from escola.models import Aluno, Matricula
+from escola.validators import *
 
 class AlunosSerializer(serializers.ModelSerializer):
     class Meta:
         model = Aluno
-        fields = ['id', 'nome', 'rg', 'cpf', 'data_nascimento']
+        fields = ['id', 'nome', 'rg', 'cpf', 'data_nascimento', 'foto']
+
+    def validate(self, data):
+        if not validate_cpf(data['cpf']):
+            raise serializers.ValidationError({'cpf':"O CPF deve ter 11 dígitos"})
+        if not validate_nome(data['nome']):
+            raise serializers.ValidationError({'nome':"Não inclua números neste campo"})
+        return data
 
 class MatriculasSerializer(serializers.ModelSerializer):
     class Meta:
