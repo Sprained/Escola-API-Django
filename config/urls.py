@@ -2,6 +2,8 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
 from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token
+from django.conf import settings
+from django.conf.urls.static import static
 from escola.views import AlunosViewset, MatrculasViewset, ListaMatriculasAluno
 from curso.views import CursosViewset, ListaMatriculasCurso
 from user.views import CreateUserView
@@ -30,7 +32,7 @@ route.register('matriculas', MatrculasViewset, basename='Matriculas')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('login/', obtain_jwt_token),
+    path('login/', obtain_jwt_token, name='login'),
     path('refresh/', refresh_jwt_token),
     path('user/', CreateUserView.as_view()),
     path('', include(route.urls)),
@@ -38,4 +40,4 @@ urlpatterns = [
     path('cursos/<int:pk>/matriculas/', ListaMatriculasCurso.as_view()),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

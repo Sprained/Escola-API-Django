@@ -1,6 +1,8 @@
 from rest_framework import viewsets, generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.pagination import PageNumberPagination
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from escola.models import Aluno, Matricula
 from escola.serializer import AlunosSerializer, MatriculasSerializer, ListaMatriculasAlunoSerializer
 
@@ -20,6 +22,10 @@ class MatrculasViewset(viewsets.ModelViewSet):
     serializer_class = MatriculasSerializer
     http_method_names = ['get', 'post', 'put']
     permission_classes = [IsAuthenticated]
+
+    @method_decorator(cache_page(20))
+    def dispatch(self, *args, **kwargs):
+        return super(MatrculasViewset, self).dispatch(*args, **kwargs)
 
 class ListaMatriculasAluno(generics.ListAPIView):
     def get_queryset(self):
